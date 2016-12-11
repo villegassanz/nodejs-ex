@@ -1,0 +1,25 @@
+After register acction and confirm email
+Login to openshift and create new application.
+
+Step 1: create application nodejs -> pennding finish.
+Step 2: Clone code to your computer-> pendding finish.
+Step 3: add socket.io to project(application)
+	-> edit on file 'package.json' 
+		 add line: "socket.io": "*"
+		 like this: 
+				 "dependencies": {
+				    "express": "~3.4.4",
+				    "socket.io": "*"
+				  },
+
+	->save file.
+Step 4: 
+	->edit code on main file: server.js
+	->save file.
+
+Step 5: push code from computer to server - > check status is success
+Step 6: open url on web. 
+------> finish setup open shift and make socket application.
+
+
+Thanks!................
