@@ -5,11 +5,35 @@
   <title>My Aplicación con Sockets</title>
   <script src="/socket.io/socket.io.js"></script>
   <script>
+  
+	
 	function prueba(){
-		var m=document.getElementById("id_autobus").value;
-		alert(m);
+		var message = {
+			id_autobus: document.getElementById('id_autobus').value,
+			rfc: document.getElementById('rfc').value,
+			ruta: document.getElementById('ruta').value,
+			eje:document.getElementById('ejemplo').value,
+			//lat:document.getElementById('latitud').value,
+			//lon:doc.getElementById('longitud').value,
+			//fecha:doc.getElementById('fecha').value,
+			//horai:doc.getElementById('hora inicio').value,
+			//horaf:doc.getElementById('hora fin').value
+		};
+			socket.emit('new-message', message);
+		return false;
 	}
+	
+	function render (data) {  
+		var html = data.map(function(elem, index) {
+		return(`<div>
+              <strong>${elem.id_autobus}</strong>:
+              <strong>${elem.rfc}</strong>
+			  <strong>${elem.ruta}</strong>
+            </div>`);
+		}).join(" ");
 
+		document.getElementById('messages').innerHTML = html;
+}
   </script>
 </head>  
 <body>  
@@ -17,6 +41,9 @@
   <div id="messages"></div>
   <br/>
     <input type="text" id="id_autobus" placeholder="Identificador" >
+	<input type="text" id="rfc" placeholder="RFC" >
+    <input type="text" id="ruta" placeholder="Ruta">
+	<input type="text" id="ejemplo" placeholder="ejemplo">
     <button id="btn1" onclick="prueba()">Enviar</button>
 </body>  
 </html>
