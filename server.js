@@ -28,5 +28,5 @@ io.on('connection', function(socket) {
 });
 
 server.listen(8080, function() {  
-  console.log("Servidor corriendo en http://nodejs1-proyectov9.44fs.preview.openshiftapps.com/:8080");
+  console.log("Servidor corriendo en http://nodejs1-proyectov9.44fs.preview.openshiftapps.com:8080");
 });
