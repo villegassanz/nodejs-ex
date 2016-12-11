@@ -4,7 +4,10 @@ var server = require('http').Server(app);
 var io = require('socket.io')(server); 
 
 var messages = [
-
+	{  
+    id_autobus: "1",
+    rfc: "Hola! que tal?"
+	}
 ];
 
 app.use(express.static('public'));
