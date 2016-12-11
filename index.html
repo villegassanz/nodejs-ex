@@ -5,7 +5,12 @@
   <title>My Aplicación con Sockets</title>
   <script src="/socket.io/socket.io.js"></script>
   <script>
-  
+	var socket = io.connect('http://nodejs1-proyectov9.44fs.preview.openshiftapps.com:8080', { 'forceNew': true });
+
+	socket.on('messages', function(data) {  
+	console.log(data);
+	render(data);
+})
 	
 	function prueba(){
 		var message = {
