@@ -1,4 +1,4 @@
-var socket = io.connect('http://nodejs1-proyectov9.44fs.preview.openshiftapps.com:8080', { 'forceNew': true });
+var socket = io.connect('http://172.30.214.15:8080', { 'forcew': true });
 
 socket.on('messages', function(data) {  
   console.log(data);
