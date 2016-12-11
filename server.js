@@ -1,7 +1,21 @@
 var express = require('express');  
 var app = express();  
 var server = require('http').Server(app);
-var io = require('socket.io')(server); 
+var io = require('socket.io')(server);
+
+var mongoose = require('mongoose');
+
+
+/*Establecer la conexion con mongodb*/
+
+mongoose.connect('mongodb://http://nodejs1-proyectov9.44fs.preview.openshiftapps.com/base', function(error){
+   if(error){
+      throw error; 
+   }else{
+      console.log('Conectado a MongoDB');
+   }
+});
+ 
 
 var messages = [
 	{  
