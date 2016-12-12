@@ -1,21 +1,30 @@
-<!DOCTYPE html>  
-<html lang="en">  
-<head>  
-  <meta charset="UTF-8">
-  <title>My Aplicación con Sockets</title>
-  <script src="/socket.io/socket.io.js"></script>
-  <script src="main.js"></script>
-</head>  
-<body>  
-  <h1>My App</h1>
-  <div id="messages"></div>
-  <br/>
-  <form onsubmit="return addMessage(this)">
-    <input type="text" id="id_autobus" placeholder="Identificador" >
-	<input type="text" id="rfc" placeholder="RFC" >
-    <input type="text" id="ruta" placeholder="Ruta">
-	 <input type="text" id="ejemplo" placeholder="ejemplo">
-    <input type="submit" value="Enviar!">
-  </form>
-</body>  
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Demo chat with socket - openshift</title>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+	<script src="socket.js"></script>
+	<script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
+</head>
+<body>
+	<form id="chat-form">
+		<input id="message" type="text" style="width: 500px; height: 50px; font-size: 20px; padding: 3px; color: blue">
+	</form>
+
+	<div id="message-list"></div>
+
+	<script>
+		var socket = io.connect("http://nodejsv2-proyectov9.44fs.preview.openshiftapps.com/");
+		$("#chat-form").on("submit", function(e){
+			var message = $("#message").val();
+			$("#message").val("")
+			socket.emit("CHAT", {message: message});
+			return false;
+		});
+		socket.on("CHAT", function(data){
+			$("#message-list").prepend("<p>"+data.message+"</p>");
+		});
+	</script>
+</body>
 </html>
