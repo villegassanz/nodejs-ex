@@ -1,0 +1,21 @@
+<!DOCTYPE html>  
+<html lang="en">  
+<head>  
+  <meta charset="UTF-8">
+  <title>My Aplicación con Sockets</title>
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="main.js"></script>
+</head>  
+<body>  
+  <h1>My App</h1>
+  <div id="messages"></div>
+  <br/>
+  <form onsubmit="return addMessage(this)">
+    <input type="text" id="id_autobus" placeholder="Identificador" >
+	<input type="text" id="rfc" placeholder="RFC" >
+    <input type="text" id="ruta" placeholder="Ruta">
+	 <input type="text" id="ejemplo" placeholder="ejemplo">
+    <input type="submit" value="Enviar!">
+  </form>
+</body>  
+</html>
