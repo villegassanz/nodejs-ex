@@ -1,0 +1,34 @@
+<!DOCTYPE html>  
+<html lang="en">  
+<head>  
+  <meta charset="UTF-8">
+  <title>My Aplicación con Sockets</title>
+  <script src="/socket.io/socket.io.js"></script>
+  </head>  
+<body>  
+  <h1>My App</h1>
+  <div id="messages"></div>
+  <br/>
+  <form onsubmit="return addMessage(this)">
+   <input type="text" id="message" placeholder="ejemplo">
+   <input type="submit" value="Enviar!">
+  </form>
+  <script>
+	$(function(){
+		var socket = io.connect();
+		var $messageForm= $('messageForm');
+		var $message= $('message');
+		var $chat =$('#chat');
+		
+		$messageForm.submit(function(e){
+			e.preventDefault();
+			socket.emit('send message', $message.val());
+			$message.val('');
+		});
+		socket.on('new message', function(data){
+			$chat.append('<div class="well">+data.msg+</div>');
+		});
+	});
+  </script>
+</body>  
+</html>
