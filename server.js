@@ -1,52 +1,93 @@
-var app = require("express")();
-var http = require("http").Server(app);
-var io = require("socket.io")(http);
-
-//
-user = [];
-connections=[];
- 
+var express = require('express');  
+var app = express();  
+var server = require('http').Server(app);  
+var io = require('socket.io')(server);
+var mongoose = require('mongoose');
 
 
-app.get('/', function (req, res){
-  res.writeHead(200, {"Content-Type": "text/plain"});
-  res.end("Hello! This is demo chat socket on openshift \n");
+/*Establecer la conexion con mongodb*
+/
+
+mongoose.connect('mongodb://localhost/base', function(error){
+   if(error){
+      throw error; 
+   }else{
+      console.log('Conectado a MongoDB');
+   }
 });
-//
+
+/*Se crea el esquema a utilizar*/
+
+var MensajeSchema = mongoose.Schema({
+    _id: String,
+    rfc: String,
+    ruta: String,
+    ejemplo:String,
+    latitud: String,
+    longitud: String,
+    fecha: Date,
+    hora_inicio: Date,
+    hora_fin: Date
+});
+
+/*'modeloMensaje' es el nombre de la "tabla" que en realidad es una coleccion,
+el segundo parametro es el nombre del esquema antes creado. Todo esto se asocia a una variable 'Modelo_Mensaje'
+que podrá acceder a los metodos desde javascript para insertar y obtener de la bd
+*/
+var Modelo_Mensaje = mongoose.model('principal', MensajeSchema);
+
+var messages = [
+
+];
+
+app.use(express.static('public'));
+
 app.get('/', function(request,response){
   response.sendFile(__dirname + '/index.html');
 });
 
-io.on('connection', function(socket) {
-	connections.push(socket);
-	console.log('Connected: %s socket connected', connections.length);
-	
-	//desconected
-	socket.on('disconnect', function(data){
-		connections.splice(connections.indexOf(socket),1);
-		console.log('Deconnected: %s socket connected', connections/length);
-	});
-	//enviar mensaje
-	socket.on('send message', function(data){
-		//console.log(data);
-		io.socket.emit('new message', {msg: data});
-	});
-	
-});	
-//
+io.on('connection', function(socket) {  
+  console.log('Alguien se ha conectado con Sockets');
 
-io.on("connection", function (socket){
-    socket.on("CHAT", function(data){
-        io.emit("CHAT", {message: data.message});
-    });
+/*----Este es el metodo "select * from", los datos de la base se guardan en 
+ el arreglo result, este arreglo se asocia a meesages, lo mismo que haciamos
+ con mysql*/
+
+  Modelo_Mensaje.find({}, function(error,result){
+      if(error){
+         throw error;
+      }else{
+         messages=result;
+         socket.emit('messages', messages);
+      }
+   });
+  //---
+ 
+  socket.on('new-message', function(data) {
+    messages.push(data);
+    io.sockets.emit('messages', messages);
+/* En esta parte se crea un nuevo objeto que será agregado a la coleccion
+*/
+    var nuevoMensaje = new Modelo_Mensaje({
+          _id: data.id_autobus, //en esta parte recibimos del arreglo data los valores que ingreso el usuario
+          rfc: data.rfc,
+          ruta: data.ruta,
+          ejemplo: data.eje,
+          fecha: new Date()
+      });
+    // en esta parte se guarda el objeto.
+      nuevoMensaje.save(function(error, result){
+         if(error){
+             throw error;
+         }else{
+            console.log("Registro exitoso");
+         }
+      });
+    
+  });
+
 });
 
-var port = process.env.OPENSHIFT_NODEJS_PORT || 8080;
-//
-console.log('Servet running ');
-//
-var ip = process.env.OPENSHIFT_NODEJS_IP;
-
-http.listen(port, ip, function(){
-    console.log("demo start success");
-})
+server.listen(8080, function() {  
+  console.log("Servidor corriendo en http://nodejsv2-proyectov9.44fs.preview.openshiftapps.com:8080");
+});
