@@ -1,136 +1,69 @@
 //  OpenShift sample Node application
-var express = require('express'),
-    fs      = require('fs'),
-    app     = express(),
-    eps     = require('ejs'),
-    morgan  = require('morgan'),
-	var mongoose = require('mongoose');
-    //mongoose.connect('mongodb://127.0.0.1:27017/base');
-	var connectionString= process.env.OPENSHIFT_MONGODB_DB_URL || 'mongodb://localhost/test'
-	mongoose.connect(connectionString);
-	var webSiteSchema = new mongoose.Schema({
-		name String,
-		created: {type: Date, default: Date.now}
-	});
-	var WebSiteModel = mongoose.model('WebSiteMode', webSiteSchema);
-	
-	
-Object.assign=require('object-assign')
-/////
-app.use(express.static(__dirname+ '/public'));
-app.get('api/website1/:name', function(req, res){
-	var website1 = new webSiteModel({name: req.params.name});
-	website1.save(function(err, doc){
-		res.json(doc);
+
+var fs = require('fs');
+var mongodb = require('mongodb');
+var express = require('express');
+var ejs = require('ejs');
+var http = require('http');
+
+var app = express();
+app.use(express.static(__dirname + '/public'));
+app.set('view engine', 'ejs');
+app.get('/', function(req, res) {
+        db.collection('example').find().toArray(function (err, items) {
+		if (err) {
+		    res.send(500, { error: 'Could not fulfill request.' });
+		} else {
+		    res.render('index', {results: items});
+		}
+        });
+});
+
+var serverIp = process.env.OPENSHIFT_NODEJS_IP || '127.0.0.1';
+var serverPort = process.env.OPENSHIFT_NODEJS_PORT || 8080;
+var dbUri = process.env.MONGOLAB_URI || 'mongodb://localhost:27017/test';
+var db;
+var server;
+mongodb.MongoClient.connect(dbUri, { server: { auto_reconnect: true }}, function (err, database) {
+	db = database;
+	seedDatabase(function(err){
+		if (err) {
+		    console.error('Failed to seed database:\n' + err);
+		} else {
+		    server = http.createServer(app);
+		    server.listen(serverPort, serverIp, function(err) {
+			    if (err) {
+				console.error('Failed to start listening at %s:%d:\n' + err, serverIp, serverPort);
+			    } 
+		    });
+		}
 	});
 });
-app.get('/process', function(req, res){
-	res.json(process.env);
-});
-///////
-var developer=[{first: 'Alice', last: 'wonderland'},
-				{first: 'Alic1', last: 'wonderlan1'}
-	]
-app.get('/rest/developer', function(res, res){
-	
-	res.json(developer);
-});	
-//////////////////////////////////////////////////
-app.engine('html', require('ejs').renderFile);
-app.use(morgan('combined'))
 
-var port = process.env.PORT || process.env.OPENSHIFT_NODEJS_PORT || 8080,
-    ip   = process.env.IP   || process.env.OPENSHIFT_NODEJS_IP || '0.0.0.0',
-    mongoURL = process.env.OPENSHIFT_MONGODB_DB_URL || process.env.MONGO_URL,
-    mongoURLLabel = "";
-
-if (mongoURL == null && process.env.DATABASE_SERVICE_NAME) {
-  var mongoServiceName = process.env.DATABASE_SERVICE_NAME.toUpperCase(),
-      mongoHost = process.env[mongoServiceName + '_SERVICE_HOST'],
-      mongoPort = process.env[mongoServiceName + '_SERVICE_PORT'],
-      mongoDatabase = process.env[mongoServiceName + '_DATABASE'],
-      mongoPassword = process.env[mongoServiceName + '_PASSWORD']
-      mongoUser = process.env[mongoServiceName + '_USER'];
-
-  if (mongoHost && mongoPort && mongoDatabase) {
-    mongoURLLabel = mongoURL = 'mongodb://';
-    if (mongoUser && mongoPassword) {
-      mongoURL += mongoUser + ':' + mongoPassword + '@';
-    }
-    // Provide UI label that excludes user id and pw
-    mongoURLLabel += mongoHost + ':' + mongoPort + '/' + mongoDatabase;
-    mongoURL += mongoHost + ':' +  mongoPort + '/' + mongoDatabase;
-
-  }
-}
-var db = null,
-    dbDetails = new Object();
-
-var initDb = function(callback) {
-  if (mongoURL == null) return;
-
-  var mongodb = require('mongodb');
-  if (mongodb == null) return;
-
-  mongodb.connect(mongoURL, function(err, conn) {
-    if (err) {
-      callback(err);
-      return;
-    }
-
-    db = conn;
-    dbDetails.databaseName = db.databaseName;
-    dbDetails.url = mongoURLLabel;
-    dbDetails.type = 'MongoDB';
-
-    console.log('Connected to MongoDB at: %s', mongoURL);
-  });
+function seedDatabase(cb){
+    var collection = db.collection('example');
+    collection.remove(function(err){
+	    if (err) {
+		console.error('Failed to clean example collection from database:\n' + err);
+	    } else {
+		db.collection('example').insert([{'salutation': 'Congrats from MongoLab. Thanks for using our OpenShift Quickstart!'},
+						 {'tip': 'If you don\'t want to use EJS for dynamic content, replace it with your chosen template engine.'},
+						 {'tip': 'There\'s not much query logic here. Better add some features and forms!'},
+						 {'tip': 'Choose your DB by changing the MONGOLAB_URI env variable on your app gear.'},
+						 {'salutation': 'Congrats from MongoLab. Thanks for using our OpenShift Quickstart!'}],
+						function (err, result) {
+						    if (err){
+							console.warn('Failed to insert seed data to example collection in database at dbUri=%s:\n' + err, dbUri);
+						    }
+						});
+		cb();
+	    }
+	});
 };
 
-app.get('/', function (req, res) {
-  // try to initialize the db on every request if it's not already
-  // initialized.
-  if (!db) {
-    initDb(function(err){});
-  }
-  if (db) {
-    var col = db.collection('counts');
-    // Create a document with request IP and current time of request
-    col.insert({ip: req.ip, date: Date.now()});
-    col.count(function(err, count){
-      res.render('index.html', { pageCountMessage : count, dbInfo: dbDetails });
-    });
-  } else {
-    res.render('index.html', { pageCountMessage : null});
-  }
-});
 
-app.get('/pagecount', function (req, res) {
-  // try to initialize the db on every request if it's not already
-  // initialized.
-  if (!db) {
-    initDb(function(err){});
-  }
-  if (db) {
-    db.collection('counts').count(function(err, count ){
-      res.send('{ pageCount: ' + count + '}');
-    });
-  } else {
-    res.send('{ pageCount: -1 }');
-  }
-});
 
-// error handling
-app.use(function(err, req, res, next){
-  console.error(err.stack);
-  res.status(500).send('Something bad happened!');
-});
 
-initDb(function(err){
-  console.log('Error connecting to Mongo. Message:\n'+err);
-});
 
-app.listen(port, ip);
-console.log('Server running on http://%s:%s', ip, port);
 
-module.exports = app ;
+
