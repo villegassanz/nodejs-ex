@@ -6,6 +6,8 @@ var express = require('express'),
     morgan  = require('morgan'),
 	var mongoose = require('mongoose');
     //mongoose.connect('mongodb://127.0.0.1:27017/base');
+	var connectionString= process.env.OPENSHIFT_MONGODB_DB_URL || 'mongodb://localhost/test'
+	mongoose.connect(connectionString);
 	var webSiteSchema = new mongoose.Schema({
 		name String,
 		created: {type: Date, default: Date.now}
