@@ -3,10 +3,37 @@ var express = require('express'),
     fs      = require('fs'),
     app     = express(),
     eps     = require('ejs'),
-    morgan  = require('morgan');
-    
+    morgan  = require('morgan'),
+	var mongoose = require('mongoose');
+    //mongoose.connect('mongodb://127.0.0.1:27017/base');
+	var webSiteSchema = new mongoose.Schema({
+		name String,
+		created: {type: Date, default: Date.now}
+	});
+	var WebSiteModel = mongoose.model('WebSiteMode', webSiteSchema);
+	
+	
 Object.assign=require('object-assign')
-
+/////
+app.use(express.static(__dirname+ '/public'));
+app.get('api/website1/:name', function(req, res){
+	var website1 = new webSiteModel({name: req.params.name});
+	website1.save(function(err, doc){
+		res.json(doc);
+	});
+});
+app.get('/process', function(req, res){
+	res.json(process.env);
+});
+///////
+var developer=[{first: 'Alice', last: 'wonderland'},
+				{first: 'Alic1', last: 'wonderlan1'}
+	]
+app.get('/rest/developer', function(res, res){
+	
+	res.json(developer);
+});	
+//////////////////////////////////////////////////
 app.engine('html', require('ejs').renderFile);
 app.use(morgan('combined'))
 
