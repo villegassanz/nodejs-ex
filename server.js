@@ -19,9 +19,9 @@ if (mongoURL == null && process.env.DATABASE_SERVICE_NAME) {
   var mongoServiceName = process.env.DATABASE_SERVICE_NAME.toUpperCase(),
       mongoHost = process.env[mongoServiceName + '127.0.0.1'],
       mongoPort = process.env[mongoServiceName + '27017'],
-      mongoDatabase = process.env[mongoServiceName + 'sampledb'],
-      mongoPassword = process.env[mongoServiceName + 'xgcupDDd5fbT6Fir']
-      mongoUser = process.env[mongoServiceName + 'user8L2'];
+      mongoDatabase = process.env[mongoServiceName + 'buslocation'],
+      mongoPassword = process.env[mongoServiceName + '12345']
+      mongoUser = process.env[mongoServiceName + 'villegas'];
 
   if (mongoHost && mongoPort && mongoDatabase) {
     mongoURLLabel = mongoURL = 'mongodb://';
