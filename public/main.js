@@ -1,4 +1,4 @@
-var socket = io.connect('http://nodejsv03-proyectov13.44fs.preview.openshiftapps.com', { 'forceNew': true });
+var socket = io.connect('http://nodejs-proyectov15.44fs.preview.openshiftapps.com', { 'forceNew': true });
 
 socket.on('messages', function(data) {  
   console.log(data);
