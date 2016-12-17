@@ -7,7 +7,7 @@ var Schema = mongoose.Schema;
 
 
 
-var db = mongoose.connect('mongodb://127.0.0.1:27017/test');
+var db = mongoose.connect('mongodb://villegas:12345@mongodb/buslocation');
 mongoose.connection.once('connected', function() {
 	console.log("Connected to database")
 });
