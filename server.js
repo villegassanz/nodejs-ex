@@ -7,12 +7,9 @@ var Schema = mongoose.Schema;
 
 
 
-mongoose.connect('mongodb://127.0.0.1:27017/proyectov15', function(error){
-   if(error){
-      throw error; 
-   }else{
-      console.log('Conectado a MongoDB');
-   }
+var db = mongoose.connect('mongodb://127.0.0.1:27017/test');
+mongoose.connection.once('connected', function() {
+	console.log("Connected to database")
 });
 
 
