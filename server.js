@@ -9,6 +9,29 @@ Object.assign=require('object-assign')
 
 app.engine('html', require('ejs').renderFile);
 app.use(morgan('combined'))
+////////////////////////////////////////////////////////////
+var MongoClient = require('mongodb').MongoClient, format = require('util').format;
+MongoClient.connect('mongodb://127.0.0.1:27017', function(err,db){
+	if(err){
+		throw err; 
+		
+	}else {
+		console.log("Connected");
+	}
+	db.close();
+});
+
+
+var Schema = require('mongoose').Schema
+ var producto_schema = new Schema({
+  nombre        :   String,
+  descripcion   :   String,
+  precio        :   String
+});
+///////////////////////////////////////////////////////////
+
+ 
+module.exports = producto_schema
 
 var port = process.env.PORT || process.env.OPENSHIFT_NODEJS_PORT || 8080,
     ip   = process.env.IP   || process.env.OPENSHIFT_NODEJS_IP || '0.0.0.0',
