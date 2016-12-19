@@ -10,8 +10,14 @@ var mongoose = require('mongoose');
  */
 var http = require('http');
 //var mongoose = require('mongoose'); // Definimos el modulo de mongoose
-mongoose.connect('mongodb://admin:zIfrXnRChzVx@127.0.0.1:27017/buslocation');  
-
+mongoose.connect('mongodb://admin:zIfrXnRChzVx@127.7.213.130:27017/buslocation', function(error) {
+	if(error) {
+		throw error;
+	}
+	else {
+		console.log('Conectado a MongoDB.');
+	}
+});
 //mongoose.connect('mongodb://localhost/users');
 
 // Definimos el Schema de la base de datos
