@@ -14,7 +14,34 @@ mongoose.connect('mongodb://villegas:12345@172.30.202.200:27017/buslocation');
 		longitud : String,
 		created : {type : Date, default: Date.now}
 	}, {collection : "usuario"});
+	
+	
+	Users = new mongoose.Schema({
+  _id: Number,
+  name: String,
+  surname: String
+}, { collection : 'usersList'}); // Añadimos la colleción que vamos acceder
 
+User = mongoose.model('users', Users);
+
+function peticionServidor(req,res){
+  res.writeHead(200, {'Content-Type': 'text/plain'});
+    // Buscamos todos los usuarios
+    User.find(function (err, data) {
+      if (err) { return console.error(err); } // Si hay un error
+      if (data === null) { // Si no hay ningún usuario
+        console.log('There aren\'t users in database');
+      }
+    // data será todos los usuarios encontrados y lo que nos devuelve
+    // será un array con todos los datos, esto se puede hacer de 
+    // una manera mucho más sencilla que veremos más adelante:
+    res.write('id\tname\tsurname\n'
+      + data[0]._id + '\t' + data[0].name + '\t' + data[0].surname + '\n'
+      + data[1]._id + '\t' + data[1].name + '\t' + data[1].surname);
+    res.end();
+    });
+
+}
 	var UsuarioModel = mongoose.model('usuario', UsuarioSchema);
 
 	var WebSiteSchema = new mongoose.Schema({
