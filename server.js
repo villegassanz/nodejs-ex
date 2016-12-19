@@ -1,52 +1,71 @@
-/*
- * Primero necesitamos crear nuestro
- * servidor que será un servidor http
- */
-var http = require('http');
-//var mongoose = require('mongoose'); // Definimos el modulo de mongoose
-
-// Conectamos con la base de datos
-mongoose.connect('mongodb://admin:zIfrXnRChzVx@127.7.213.130:27017/buslocation');  
-
-//mongoose.connect('mongodb://localhost/users');
-
-// Definimos el Schema de la base de datos
-Users = new mongoose.Schema({
-  _id: Number,
-  name: String,
-  surname: String
-}, { collection : 'usersList'}); // Añadimos la colleción que vamos acceder
+var express = require('express');  
+var app = express();  
+var server = require('http').Server(app);
 
 
-// Añadimos el schema al modelo
-User = mongoose.model('users', Users);
+var mongoose = require('mongoose');
 
-/*
- * Creamos el servidor y un callback
- * que contendrá una respuesta(res) y una
- * solicitud(req)
- */
-function peticionServidor(req,res){
-  res.writeHead(200, {'Content-Type': 'text/plain'});
-    // Buscamos todos los usuarios
-    User.find(function (err, data) {
-      if (err) { return console.error(err); } // Si hay un error
-      if (data === null) { // Si no hay ningún usuario
-        console.log('There aren\'t users in database');
-      }
-    // data será todos los usuarios encontrados y lo que nos devuelve
-    // será un array con todos los datos, esto se puede hacer de 
-    // una manera mucho más sencilla que veremos más adelante:
-    res.write('id\tname\tsurname\n'
-      + data[0]._id + '\t' + data[0].name + '\t' + data[0].surname + '\n'
-      + data[1]._id + '\t' + data[1].name + '\t' + data[1].surname);
-    res.end();
-    });
-}
+mongoose.connect('mongodb://villegas:12345@172.30.202.200:27017/buslocation');  
+
+	var UsuarioSchema = new mongoose.Schema({
+		_id: String,
+		nombre : String,
+		latitud : String,
+		longitud : String,
+		created : {type : Date, default: Date.now}
+	}, {collection : "usuario"});
+
+	var UsuarioModel = mongoose.model('usuario', UsuarioSchema);
+
+	var WebSiteSchema = new mongoose.Schema({
+		name: String,
+		created : {type : Date, default: Date.now}
+	}, {collection : "website"});
+
+	var WebSiteModel = mongoose.model('WebSite', WebSiteSchema);
+
+app.use(express.static('public'));
+
+app.get('/', function(request,response){
+  response.sendFile(__dirname + '/index.html');
+});
+
+app.get('/api/usuario', function(req, res){
+	var user = new UsuarioModel({_id : req.query.id, nombre: req.query.name });
+	user.save(function(err,doc){
+		res.json(doc);	
+	});
+});
+
+app.get('/api/website/:name', function(req, res){
+	var website = new WebSiteModel({name : req.params.name });
+	website.save(function(err,doc){
+		res.json(doc);	
+	});
+});
+
+app.get('/api/usuarios',function(req, res){
+	UsuarioModel.find(function(err, sites){
+		res.json(sites);
+	});
+});
+
+app.get('/api/website',function(req, res){
+	WebSiteModel.find(function(err, sites){
+		res.json(sites);
+	});
+});
+
+app.get('/process', function(req, res){
+	res.json(process.env);
+});
+
+var ip = process.env.OPENSHIFT_NODEJS_IP || '127.0.0.1';
+var port = process.env.OPENSHIFT_NODEJS_PORT || 3000;
+
+app.listen(port, ip);
 
 
-
-http.createServer(peticionServidor).listen(3000, function() {
-  console.log("Node server running on http://localhost:3000");
-}); // Escuchamos el servidor por el puerto 3000
-Contact GitHub 
+server.listen(8080, function() {  
+  console.log("Servidor corriendo en http://localhost:8080");
+});
