@@ -16,7 +16,7 @@ mongoose.connect('mongodb://admin:zIfrXnRChzVx@127.0.0.1:27017/buslocation');
 //mongoose.connect('mongodb://localhost/users');
 
 // Definimos el Schema de la base de datos
-Users = new mongoose.Schema({
+User = new mongoose.Schema({
   _id: Number,
   name: String,
   surname: String
@@ -24,7 +24,7 @@ Users = new mongoose.Schema({
 
 
 // Añadimos el schema al modelo
-User = mongoose.model('users', Users);
+User = mongoose.model('users', User);
 
 /*
  * Creamos el servidor y un callback
