@@ -12,7 +12,6 @@ var http = require('http');
 //var mongoose = require('mongoose'); // Definimos el modulo de mongoose
 mongoose.connect('mongodb://admin:zIfrXnRChzVx@127.0.0.1:27017/buslocation');  
 
-// Conectamos con la base de datos
 //mongoose.connect('mongodb://localhost/users');
 
 // Definimos el Schema de la base de datos
