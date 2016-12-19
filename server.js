@@ -1,12 +1,82 @@
 var express = require('express');  
 var app = express();  
 var server = require('http').Server(app);
+var io = require('socket.io')(http);
+var mongoose = require('mongoose');
 
 
 var mongoose = require('mongoose');
 //var connectionString = process.env.OPENSHIFT_MONGODB_DB_URL || 
 
 mongoose.connect('mongodb://villegas:12345@172.30.218.87:27017/buslocation');  
+
+var beacons =
+[
+{
+	mac: '[E6:20:24:20:0A:B2]',
+	estado: 0,
+	ruta: 'Tule Oaxaca',
+	idSocket: ''
+},
+{
+	mac: '[D3:40:0D:7B:0B:18]',
+	estado: 0,
+	ruta: 'Tec Oaxaca',
+	idSocket: ''
+},
+{
+	mac: '[F2:57:6B:A5:09:DB]',
+	estado: 0,
+	ruta: 'DIF Oaxaca',
+	idSocket: ''
+}
+];
+
+
+io.on('connection', function(socket) {
+	console.log('El usuario: ' + socket.id + ' se ha conectado.');
+	socket.on('enviarCoordenadas', function(mensaje) {
+		var datos = mensaje.split(',');
+		console.log(socket.id + ': ' + datos[2] + ', ' + datos[3]);
+		for(var i = 0; i < beacons.length; i++) {
+			if(datos[5] === beacons[i].mac && beacons[i].idSocket === '') {
+				beacons[i].idSocket = socket.id;
+			}
+			if(beacons[i].idSocket === socket.id && datos[5] === beacons[i].mac) {
+				socket.broadcast.emit('recibirCoordenadas', {
+					idUser: datos[0],
+					userName: datos[1],
+					tipoUsuario: datos[2],
+					idSocket: socket.id,
+					latitud: datos[3],
+					longitud: datos[4],
+					ruta: beacons[i].ruta
+				});
+			}
+		}
+	});
+	socket.on('bluetoothApagado', function() {
+		for(var i = 0; i < beacons.length; i++) {
+			if(beacons[i].idSocket === socket.id) {
+				beacons[i].idSocket = '';
+			}
+		}
+		socket.broadcast.emit('bluetoothApagadoAndroid', {
+			idSocket: socket.id
+		});
+	});
+	socket.on('disconnect', function() {
+		console.log('El usuario: ' + socket.id + ' se ha desconectado.');
+		for(var i = 0; i < beacons.length; i++) {
+			if(beacons[i].idSocket === socket.id) {
+				beacons[i].idSocket = '';
+			}
+		}
+		socket.broadcast.emit('eliminarCoordenadas', {
+			idSocket: socket.id
+		});
+	});
+});
 
 	var UsuarioSchema = new mongoose.Schema({
 		_id: String,
