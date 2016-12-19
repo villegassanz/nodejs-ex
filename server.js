@@ -4,8 +4,9 @@ var server = require('http').Server(app);
 
 
 var mongoose = require('mongoose');
+//var connectionString = process.env.OPENSHIFT_MONGODB_DB_URL || 
 
-mongoose.connect('mongodb://villegas:12345@172.31.8.206:27017/buslocation');  
+mongoose.connect('mongodb://villegas:12345@127.0.0.1:27017/buslocation');  
 
 	var UsuarioSchema = new mongoose.Schema({
 		_id: String,
