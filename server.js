@@ -3,7 +3,7 @@
  * servidor que será un servidor http
  */
 var http = require('http');
-var mongoose = require('mongoose'); // Definimos el modulo de mongoose
+//var mongoose = require('mongoose'); // Definimos el modulo de mongoose
 
 // Conectamos con la base de datos
 mongoose.connect('mongodb://admin:zIfrXnRChzVx@127.7.213.130:27017/buslocation');  
