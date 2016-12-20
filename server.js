@@ -12,7 +12,7 @@ var port = process.env.OPENSHIFT_NODEJS_PORT || 8080;
 //var mongoose = require('mongoose');
 //var connectionString = process.env.OPENSHIFT_MONGODB_DB_URL || 
 
-mongoose.connect('mongodb://tecnologias:12345@	172.30.239.235:27017/buslocation');  
+mongoose.connect('mongodb://tecnologias:12345@172.30.239.235:27017/buslocation');  
 
 var beacons =
 [
