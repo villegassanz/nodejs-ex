@@ -81,7 +81,7 @@ io.on('connection', function(socket) {
 		});
 	});
 });
-
+/*
 	var UsuarioSchema = new mongoose.Schema({
 		_id: String,
 		nombre : String,
@@ -134,7 +134,7 @@ app.get('/api/website',function(req, res){
 app.get('/process', function(req, res){
 	res.json(process.env);
 });
-
+*/
 
 //app.listen(port, ip);
 
