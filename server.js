@@ -81,23 +81,38 @@ io.on('connection', function(socket) {
 		});
 	});
 });
-/*
+/////////////////////////////////////////////////////
 	var UsuarioSchema = new mongoose.Schema({
 		_id: String,
 		nombre : String,
-		latitud : String,
-		longitud : String,
+		tipo_cuenta : String,
 		created : {type : Date, default: Date.now}
 	}, {collection : "usuario"});
 
 	var UsuarioModel = mongoose.model('usuario', UsuarioSchema);
 
-	var WebSiteSchema = new mongoose.Schema({
-		name: String,
-		created : {type : Date, default: Date.now}
-	}, {collection : "website"});
+	app.get('/api/user', function(req, res){
+	var user = new UsuarioModel({_id : req.query.id, nombre: req.query.nombre, tipo_cuenta: req.query.tipo_cuenta});
+	user.save(function(err,doc){
+			res.json(doc);	
+		});
+	});
 
-	var WebSiteModel = mongoose.model('WebSite', WebSiteSchema);
+	app.get('/api/users',function(req, res){
+	UsuarioModel.find(function(err, sites){
+			res.json(sites);
+		});
+	});
+/*	
+	var rutaSchema = new mongoose.Schema({
+		id_ruta: String,
+		mac: String,
+		nombre_ruta: String,
+		tipoCuenta: String,
+		created : {type : Date, default: Date.now}
+	}, {collection : "rutas"});
+
+	var rutaModel = mongoose.model('ruta', UsuarioSchema);
 
 //app.use(express.static('public'));
 
