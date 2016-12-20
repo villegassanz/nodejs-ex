@@ -84,7 +84,6 @@ io.on('connection', function(socket) {
 /////////////////////////////////////////////////////
 	
 	var AutorSchema = new mongoose.Schema({  
-		autorId  : ObjectId, 
     		nombre: String,
     		biografia: String,
     		fecha_de_nacimiento: Date,
