@@ -83,6 +83,58 @@ io.on('connection', function(socket) {
 });
 /////////////////////////////////////////////////////
 	
+	var UsuarioSchema = new mongoose.Schema({
+		id_usuario: String,
+    		nombre: String,
+    		tipo_cuenta: String
+	}, {collection : "usuario"});
+
+
+	var UsuarioModel = mongoose.model('usuario', AutorSchema);
+
+	var RutaSchema = new mongoose.Schema({  
+   		id_ruta: String,
+		mac: String,
+    		nombre_ruta: String,
+    		id_usuario: { type:  mongoose.Schema.ObjectId, ref: "usuario" } 
+	}, {collection : "ruta"});
+
+	var RutaModel = mongoose.model('ruta', LibroSchema);
+
+	app.get('/api/user', function(req, res){
+	var obj_usuario = new UsuarioModel({id_usuario: req.query.id, nombre: req.query.nombre, tipo_cuenta: req.query.cuenta});
+	obj_usuario.save(function(err,doc){
+			res.json(doc);	
+		});
+	});
+
+	app.get('/api/users',function(req, res){
+	UsuarioModel.find(function(err, usuarios){
+			res.json(usuarios);
+		});
+	});
+
+	app.get('/api/ruta', function(req, res){
+	var ruta1 = new RutaModel({id_ruta: req.query.id, mac: req.query.mac, nombre_ruta: req.query.ruta, id_usuario: req.query.id_usuario });
+	ruta1.save(function(err,doc){
+			res.json(doc);	
+		});
+	});
+
+	app.get("/api/ruta_usuario", function(req, res) {  
+    		RutaModel.find({}, function(err, rutas) {
+        	UsuarioModel.populate(rutas, {path: "usuario"},function(err, usuarios){
+            			res.json(usuarios);
+        		}); 
+    		});	
+	});
+	
+	app.get('/api/rutas',function(req, res){
+	RutaModel.find(function(err, rutas){
+			res.json(rutas);
+		});
+	});	
+/*
 	var AutorSchema = new mongoose.Schema({  
     		nombre: String,
     		biografia: String,
@@ -135,7 +187,7 @@ io.on('connection', function(socket) {
 			res.json(sites);
 		});
 	});
-
+*/
 
 //app.listen(port, ip);
 
