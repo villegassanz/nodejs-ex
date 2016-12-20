@@ -136,7 +136,7 @@ app.get('/process', function(req, res){
 });
 
 
-app.listen(port, ip);
+//app.listen(port, ip);
 
 /*
 http.listen(8080, function() {  
