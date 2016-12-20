@@ -90,7 +90,7 @@ io.on('connection', function(socket) {
 	}, {collection : "usuario"});
 
 
-	var UsuarioModel = mongoose.model('usuario', AutorSchema);
+	var UsuarioModel = mongoose.model('usuario', UsuarioSchema);
 
 	var RutaSchema = new mongoose.Schema({  
    		id_ruta: String,
@@ -99,7 +99,7 @@ io.on('connection', function(socket) {
     		id_usuario: { type:  mongoose.Schema.ObjectId, ref: "usuario" } 
 	}, {collection : "ruta"});
 
-	var RutaModel = mongoose.model('ruta', LibroSchema);
+	var RutaModel = mongoose.model('ruta', RutaSchema);
 
 	app.get('/api/user', function(req, res){
 	var obj_usuario = new UsuarioModel({id_usuario: req.query.id, nombre: req.query.nombre, tipo_cuenta: req.query.cuenta});
