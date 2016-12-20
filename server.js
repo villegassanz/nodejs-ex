@@ -84,7 +84,6 @@ io.on('connection', function(socket) {
 /////////////////////////////////////////////////////
 	
 	var UsuarioSchema = new mongoose.Schema({
-		id_usuario: String,
     		nombre: String,
     		tipo_cuenta: String
 	}, {collection : "usuario"});
@@ -93,7 +92,6 @@ io.on('connection', function(socket) {
 	var UsuarioModel = mongoose.model('usuario', UsuarioSchema);
 
 	var RutaSchema = new mongoose.Schema({  
-   		id_ruta: String,
 		mac: String,
     		nombre_ruta: String,
     		id_usuario: { type:  mongoose.Schema.ObjectId, ref: "usuario" } 
@@ -102,7 +100,7 @@ io.on('connection', function(socket) {
 	var RutaModel = mongoose.model('ruta', RutaSchema);
 
 	app.get('/api/user', function(req, res){
-	var obj_usuario = new UsuarioModel({id_usuario: req.query.id, nombre: req.query.nombre, tipo_cuenta: req.query.cuenta});
+	var obj_usuario = new UsuarioModel({nombre: req.query.nombre, tipo_cuenta: req.query.cuenta});
 	obj_usuario.save(function(err,doc){
 			res.json(doc);	
 		});
@@ -115,7 +113,7 @@ io.on('connection', function(socket) {
 	});
 
 	app.get('/api/ruta', function(req, res){
-	var ruta1 = new RutaModel({id_ruta: req.query.id, mac: req.query.mac, nombre_ruta: req.query.ruta, id_usuario: req.query.id_usuario });
+	var ruta1 = new RutaModel({mac: req.query.mac, nombre_ruta: req.query.ruta, id_usuario: req.query.id_usuario });
 	ruta1.save(function(err,doc){
 			res.json(doc);	
 		});
