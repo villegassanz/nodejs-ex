@@ -1,7 +1,7 @@
 var express = require('express');  
 var app = express();  
 var http = require('http').Server(app);
-var server = require('http').Server(app);
+//var server = require('http').Server(app);
 var io = require('socket.io')(http);
 var mongoose = require('mongoose');
 
@@ -133,7 +133,7 @@ app.get('/process', function(req, res){
 });
 
 var ip = process.env.OPENSHIFT_NODEJS_IP || '127.0.0.1';
-var port = process.env.OPENSHIFT_NODEJS_PORT || 3000;
+var port = process.env.OPENSHIFT_NODEJS_PORT || 8080;
 
 app.listen(port, ip);
 
