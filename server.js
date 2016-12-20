@@ -1,6 +1,5 @@
-var app = require('express')(); 
- 
-//var app = express();  
+var app = require('express')();  
+var app = express();  
 //var http = require('http').Server(app);
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
@@ -137,7 +136,7 @@ app.get('/process', function(req, res){
 });
 
 
-//app.listen(port, ip);
+app.listen(port, ip);
 
 /*
 http.listen(8080, function() {  
