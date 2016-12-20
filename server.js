@@ -142,6 +142,6 @@ var port = process.env.OPENSHIFT_NODEJS_PORT || 8080;
 http.listen(8080, function() {  
   console.log("Servidor corriendo en http://localhost:8080");
 });*/
-http.listen(puerto, ip, function() {
-	console.log('Servidor listo en ' + ip + ':' + puerto + '...');
+http.listen(port, ip, function() {
+	console.log('Servidor listo en ' + ip + ':' + port + '...');
 });
