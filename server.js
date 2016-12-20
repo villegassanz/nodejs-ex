@@ -97,7 +97,7 @@ io.on('connection', function(socket) {
 
 	var WebSiteModel = mongoose.model('WebSite', WebSiteSchema);
 
-app.use(express.static('public'));
+//app.use(express.static('public'));
 
 app.get('/', function(request,response){
   response.sendFile(__dirname + '/index.html');
