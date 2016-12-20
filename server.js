@@ -1,5 +1,6 @@
-var express = require('express');  
-var app = express();  
+var app = require('express')(); 
+ 
+//var app = express();  
 //var http = require('http').Server(app);
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
@@ -135,9 +136,12 @@ app.get('/process', function(req, res){
 var ip = process.env.OPENSHIFT_NODEJS_IP || '127.0.0.1';
 var port = process.env.OPENSHIFT_NODEJS_PORT || 8080;
 
-app.listen(port, ip);
+//app.listen(port, ip);
 
-
+/*
 http.listen(8080, function() {  
   console.log("Servidor corriendo en http://localhost:8080");
+});*/
+http.listen(puerto, ip, function() {
+	console.log('Servidor listo en ' + ip + ':' + puerto + '...');
 });
