@@ -5,9 +5,12 @@ var app = require('express')();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var mongoose = require('mongoose');
+var ip = process.env.OPENSHIFT_NODEJS_IP || '127.0.0.1';
+var port = process.env.OPENSHIFT_NODEJS_PORT || 8080;
 
 
-var mongoose = require('mongoose');
+
+//var mongoose = require('mongoose');
 //var connectionString = process.env.OPENSHIFT_MONGODB_DB_URL || 
 
 mongoose.connect('mongodb://villegas:12345@172.30.218.87:27017/buslocation');  
@@ -133,8 +136,6 @@ app.get('/process', function(req, res){
 	res.json(process.env);
 });
 
-var ip = process.env.OPENSHIFT_NODEJS_IP || '127.0.0.1';
-var port = process.env.OPENSHIFT_NODEJS_PORT || 8080;
 
 //app.listen(port, ip);
 
