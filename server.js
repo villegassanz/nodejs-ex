@@ -120,9 +120,9 @@ io.on('connection', function(socket) {
 	});
 
 	app.get("/api/ruta_usuario", function(req, res) {  
-    		RutaModel.find({}, function(err, rutas) {
-        	UsuarioModel.populate(rutas, {path: "usuario"},function(err, usuarios){
-            			res.json(usuarios);
+    		RutaModel.find({}, function(err, rutaa) {
+        	UsuarioModel.populate(rutaa, {path: "usuario"},function(err, rutaa){
+            			res.json(rutaa);
         		}); 
     		});	
 	});
