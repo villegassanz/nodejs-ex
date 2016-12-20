@@ -138,10 +138,12 @@ app.get('/process', function(req, res){
 
 //app.listen(port, ip);
 
-/*
+
 http.listen(8080, function() {  
   console.log("Servidor corriendo en http://localhost:8080");
-});*/
+});
+/*
 http.listen(port, ip, function() {
 	console.log('Servidor listo en ' + ip + ':' + port + '...');
 });
+*/
