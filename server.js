@@ -113,7 +113,7 @@ io.on('connection', function(socket) {
 	});
 
 	app.get('/api/ruta', function(req, res){
-	var ruta1 = new RutaModel({mac: req.query.mac, nombre_ruta: req.query.ruta, id_usuario: req.query.id_usuario });
+	var ruta1 = new RutaModel({mac: req.query.mac, nombre_ruta: req.query.ruta, usuario: req.query.id_usuario });
 	ruta1.save(function(err,doc){
 			res.json(doc);	
 		});
