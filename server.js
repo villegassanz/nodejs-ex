@@ -94,7 +94,7 @@ io.on('connection', function(socket) {
 	var RutaSchema = new mongoose.Schema({  
 		mac: String,
     		nombre_ruta: String,
-    		id_usuario: { type:  mongoose.Schema.ObjectId, ref: "usuario" } 
+    		usuario: { type:  mongoose.Schema.ObjectId, ref: "usuario" } 
 	}, {collection : "ruta"});
 
 	var RutaModel = mongoose.model('ruta', RutaSchema);
